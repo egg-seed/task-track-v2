@@ -7,8 +7,8 @@ Create Date: ${create_date}
 
 from collections.abc import Sequence
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 ${imports if imports else ""}
 
 revision: str = ${repr(up_revision)}
@@ -18,8 +18,8 @@ depends_on: str | Sequence[str] | None = ${repr(depends_on)}
 
 
 def upgrade() -> None:
-    pass
+    ${upgrades if upgrades else "pass"}
 
 
 def downgrade() -> None:
-    pass
+    ${downgrades if downgrades else "pass"}

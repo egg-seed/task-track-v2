@@ -1,0 +1,116 @@
+name: Sample quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        phase: [phase-01-basic, phase-02-router, phase-03-sqlmodel, phase-04-alembic]
+    defaults:
+      run:
+        working-directory: ${{ matrix.phase }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install Python 3.14
+        run: uv python install 3.14
+      - name: Sync locked dependencies
+        run: uv sync --locked
+      - name: Lint
+        run: uv run ruff check .
+      - name: Format check
+        run: uv run ruff format --check .
+      - name: Type check
+        run: uv run mypy app tests
+      - name: Tests and coverage
+        run: |
+          uv run --locked --with "pytest-cov==7.1.0" pytest -q \
+            --cov=app \
+            --cov-branch \
+            --cov-report=term-missing \
+            --cov-report=xml:coverage.xml \
+            --cov-report="markdown-append:$GITHUB_STEP_SUMMARY" \
+            --cov-fail-under=80
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.phase }}
+          path: ${{ matrix.phase }}/coverage.xml
+          if-no-files-found: warn
+
+  cognito-auth:
+    name: Cognito JWT offline authentication tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cognito-auth
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install Python 3.14
+        run: uv python install 3.14
+      - name: Sync locked dependencies
+        run: uv sync --locked
+      - name: Lint
+        run: uv run ruff check .
+      - name: Format check
+        run: uv run ruff format --check .
+      - name: Type check
+        run: uv run mypy
+      - name: Offline JWT checks and coverage
+        run: |
+          uv run --locked --with "pytest-cov==7.1.0" pytest -q \
+            --cov=app \
+            --cov-branch \
+            --cov-report=term-missing \
+            --cov-report="markdown-append:$GITHUB_STEP_SUMMARY" \
+            --cov-fail-under=80
+
+  async-demo:
+    name: Asyncio demo smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Verify async demo
+        run: python sync-async-demo.py
+
+  phase01-container:
+    name: Phase 01 Docker build and smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build learning image
+        run: docker build -t fastapi-v2-phase01 phase-01-basic
+      - name: Start container
+        run: |
+          docker run -d --name phase01-api -p 127.0.0.1:8000:8000 fastapi-v2-phase01
+      - name: Verify health endpoint
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8000/health | grep -q '"status":"ok"'; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs phase01-api
+          exit 1
+      - name: Clean up
+        if: always()
+        run: docker rm --force phase01-api || true

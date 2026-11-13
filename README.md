@@ -35,9 +35,11 @@ uv run fastapi dev
 
 `http://127.0.0.1:8000/docs`から試せます。
 
+`cognito-auth` を起動するには、Cognito User Poolの環境変数が必要です。手順は [cognito-auth/README.md](cognito-auth/README.md) を参照してください。テストだけならAWSアカウントは不要です。
+
 ## テストと品質チェック
 
-各フェーズには独立した`pyproject.toml`、`uv.lock`、テストがあります。
+各フェーズには独立した`pyproject.toml`、`uv.lock`、テストがあります。Phase 01〜04では、次のコマンドで確認できます。
 
 ```bash
 uv run pytest -q
@@ -45,6 +47,8 @@ uv run ruff check .
 uv run ruff format --check .
 uv run mypy app tests
 ```
+
+`cognito-auth` は `app.py` と `test_app.py` だけの構成なので、型チェックは `uv run mypy` で実行します。
 
 GitHub ActionsはMatrixでPhase 01〜04を独立して検証します。Python 3.14環境で各フェーズのuv同期、Ruff、mypy、pytestを実行します。Phase 01のDockerビルドとヘルスチェック、Cognitoサンプルのオフラインテスト、asyncioデモもCI対象です。
 

@@ -6,8 +6,8 @@ Zenn の技術書「実務で役立つAPI設計と実装 第2版」のサンプ�
 
 | サンプル | ディレクトリ | 内容 |
 |---|---|---|
-| Phase 01 | [phase-01-basic](phase-01-basic/) | 単一`main.py`でTodo CRUDの基本を学ぶ |
-| Phase 02 | [phase-02-router](phase-02-router/) | 同じTodo APIをRouter・Schema・依存性注入に分離 |
+| Phase 01 | [phase-01-basic](phase-01-basic/) | 単一`main.py`でタスク管理APIのCRUDの基本を学ぶ |
+| Phase 02 | [phase-02-router](phase-02-router/) | 同じTask APIをRouter・Schema・依存性注入に分離 |
 | Phase 03 | [phase-03-sqlmodel](phase-03-sqlmodel/) | SQLModel・Session・Repositoryを導入 |
 | Phase 04 | [phase-04-alembic](phase-04-alembic/) | Alembicによるスキーマ変更 |
 | 発展編 | [cognito-auth](cognito-auth/) | Amazon Cognitoのアクセストークン検証と認可 |

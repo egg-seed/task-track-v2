@@ -137,3 +137,6 @@ def test_jwks_client_uses_issuer_endpoint() -> None:
     jwks = module.jwks_client(ISSUER)
     assert jwks.uri == f"{ISSUER}/.well-known/jwks.json"
     assert module.jwks_client(ISSUER) is jwks
+    # Only the time-limited JWKS cache is used; no unbounded per-key cache.
+    assert jwks.jwk_set_cache is not None
+    assert not hasattr(jwks.get_signing_key, "cache_info")

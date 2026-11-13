@@ -1,4 +1,4 @@
-# Phase 01: 単一ファイルから始めるTodo API
+# Phase 01: 単一ファイルから始めるTask API
 
 初学者向けに、`app/main.py` にFastAPI、Pydanticの入出力モデル、メモリ上のCRUDをまとめた段階です。後のPhase 02で同じAPIをRouter・Schemaへ分割します。データは再起動で消えます。
 

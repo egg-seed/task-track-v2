@@ -53,3 +53,16 @@ def test_migrated_database_matches_sqlmodel_metadata(test_engine: Engine) -> Non
         context = MigrationContext.configure(connection)
         differences = compare_metadata(context, SQLModel.metadata)
     assert differences == []
+
+
+def test_upgrade_accepts_percent_in_database_url(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # URL-encoded values contain "%"; Alembic's ConfigParser must not interpolate it.
+    # SQLAlchemy decodes "%40" back to "@", so the directory on disk is "p@ss".
+    (tmp_path / "p@ss").mkdir()
+    db_url = f"sqlite:///{tmp_path}/p%40ss/migration.db"
+    monkeypatch.setenv("TASKS_DATABASE_URL", db_url)
+    cfg = Config(str(Path(__file__).parents[2] / "alembic.ini"))
+    command.upgrade(cfg, "head")
+    assert "task" in inspect(create_engine(db_url)).get_table_names()

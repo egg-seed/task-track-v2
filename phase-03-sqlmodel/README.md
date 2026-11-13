@@ -1,6 +1,6 @@
 # Phase 03 — SQLModelとRepository
 
-Phase 02と同じTodo APIをSQLiteへ永続化します。**SQLModelのテーブルモデル**と**Pydantic APIスキーマ**を分離し、RouterにはSQLを書かず、Repositoryから呼び出します。
+Phase 02と同じTask APIをSQLiteへ永続化します。**SQLModelのテーブルモデル**と**Pydantic APIスキーマ**を分離し、RouterにはSQLを書かず、Repositoryから呼び出します。
 
 ## 起動とテスト
 

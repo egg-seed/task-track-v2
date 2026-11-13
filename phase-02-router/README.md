@@ -1,6 +1,6 @@
-# Phase 02: Router・Schemaに分割したTodo API
+# Phase 02: Router・Schemaに分割したTask API
 
-Phase 01と同じTodo APIを題材に、`main.py` をアプリケーションの初期化だけにして、`api/routes/` と `schemas/` を切り出したスナップショットです。
+Phase 01と同じTask APIを題材に、`main.py` をアプリケーションの初期化だけにして、`api/routes/` と `schemas/` を切り出したスナップショットです。
 
 - `app/main.py`: アプリ生成とRouter登録
 - `app/api/routes/`: HTTPエンドポイント

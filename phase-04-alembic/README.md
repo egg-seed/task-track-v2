@@ -1,6 +1,6 @@
 # Phase 04 — AlembicによるDBスキーマのバージョン管理
 
-Phase 03のTodo APIを引き継ぎ、テーブル作成をアプリ起動時の `create_all()` からAlembicへ移します。
+Phase 03のTask APIを引き継ぎ、テーブル作成をアプリ起動時の `create_all()` からAlembicへ移します。
 
 ## 起動
 

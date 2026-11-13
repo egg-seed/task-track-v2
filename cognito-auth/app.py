@@ -14,6 +14,7 @@ app = FastAPI(title="Cognito JWT verification demo")
 bearer = HTTPBearer(auto_error=False)
 
 JWKS_TIMEOUT_SECONDS = 5
+JWKS_CACHE_SECONDS = 300
 
 
 def settings() -> tuple[str, str]:
@@ -27,10 +28,13 @@ def settings() -> tuple[str, str]:
 
 @lru_cache
 def jwks_client(issuer: str) -> PyJWKClient:
-    # PyJWKClient caches keys and refreshes the JWKS when an unknown kid is seen.
+    # The whole JWKS is cached for `lifespan` seconds and refetched when an unknown kid
+    # arrives. Per-key caching (cache_keys=True) is off: it never expires, so a key that
+    # Cognito removed would keep being accepted.
     return PyJWKClient(
         f"{issuer}/.well-known/jwks.json",
-        cache_keys=True,
+        cache_keys=False,
+        lifespan=JWKS_CACHE_SECONDS,
         timeout=JWKS_TIMEOUT_SECONDS,
     )
 

@@ -8,7 +8,8 @@ from app.db.session import database_url
 from app.models.task import Task  # noqa: F401
 
 config = context.config
-config.set_main_option("sqlalchemy.url", database_url())
+# ConfigParser treats "%" as interpolation, so escape it (e.g. URL-encoded passwords).
+config.set_main_option("sqlalchemy.url", database_url().replace("%", "%%"))
 target_metadata = SQLModel.metadata
 
 

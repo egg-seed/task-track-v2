@@ -2,7 +2,7 @@
 FROM python:3.14-slim
 
 # Pin uv to keep the build tool reproducible.
-COPY --from=ghcr.io/astral-sh/uv:0.13.1 /uv /uvx /usr/local/bin/
+COPY --from=ghcr.io/astral-sh/uv:0.13.8 /uv /uvx /usr/local/bin/
 
 ENV UV_PYTHON_DOWNLOADS=0
 WORKDIR /code

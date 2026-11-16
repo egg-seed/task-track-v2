@@ -57,3 +57,32 @@ async def test_fetch_task_timeout() -> None:
     ) as client:
         with pytest.raises(UpstreamError, match="External API request failed"):
             await fetch_task(client, 7)
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    "error",
+    [httpx.RemoteProtocolError, httpx.ProxyError, httpx.ConnectError],
+)
+async def test_fetch_task_transport_errors(error: type[httpx.TransportError]) -> None:
+    # TimeoutException and NetworkError alone would let these escape unconverted.
+    def handler(request: httpx.Request) -> httpx.Response:
+        raise error("transport failed", request=request)
+
+    async with httpx.AsyncClient(
+        base_url="https://example.invalid",
+        transport=httpx.MockTransport(handler),
+    ) as client:
+        with pytest.raises(UpstreamError, match="External API request failed"):
+            await fetch_task(client, 7)
+
+
+@pytest.mark.anyio
+async def test_fetch_task_broken_json() -> None:
+    # A 200 response whose body is not JSON raises json.JSONDecodeError (a ValueError).
+    async with httpx.AsyncClient(
+        base_url="https://example.invalid",
+        transport=httpx.MockTransport(lambda request: httpx.Response(200, text="<html>")),
+    ) as client:
+        with pytest.raises(UpstreamError, match="External API response was invalid"):
+            await fetch_task(client, 7)

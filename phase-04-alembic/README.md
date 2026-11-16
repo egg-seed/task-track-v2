@@ -66,4 +66,24 @@ TASKS_TEST_POSTGRES_URL=postgresql://tasks:devpass@localhost:5432/tasks_test uv 
 
 ログレベルは `TASKS_LOG_LEVEL`（既定は `INFO`）で変えられます。
 
+## 本番向けのコンテナで動かす（第25章）
+
+`Dockerfile` は本番を想定した構成です。
+
+- 2段階のビルド：ビルド用の段階でuvを使って仮想環境を作り、実行用の段階には仮想環境とコードだけをコピーする（uvとそのキャッシュは実行用イメージに入らない）
+- 仮想環境とコードを別のレイヤーにする：コードを変えても、約140MBの仮想環境のレイヤーは作り直さない
+- root以外のユーザー（UID 10001）で実行する
+- `CMD` をexec形式で書き、`docker stop` のSIGTERMをFastAPIが直接受け取って終了する
+- `HEALTHCHECK` で `/health`（liveness）を確かめる
+
+`compose.yaml` は、PostgreSQL、マイグレーション（1回だけ実行して終了）、APIの3つのサービスを手元で動かします。パスワードは手元の実験専用です。
+
+```bash
+docker compose up --build -d
+curl http://127.0.0.1:8000/health/ready
+docker compose down -v   # データのボリュームも削除する
+```
+
+手元の8000番が使用中なら、`TASKS_PORT=8001 docker compose up --build -d` のようにポートを変えます。
+
 `migrations/versions` のリビジョンは手動検証済みのコードとして保存しています。自動生成された変更は、適用前に必ずレビューします。フェーズは教育用サンプルであり、運用DBのバックアップ・復元や無停止変更を保証するものではありません。

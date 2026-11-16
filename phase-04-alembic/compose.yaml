@@ -1,0 +1,47 @@
+# Chapter 25: run Phase 04 with PostgreSQL in containers, locally.
+# The password below is for local experiments only. Never reuse it.
+#
+#   docker compose up --build -d
+#   curl http://127.0.0.1:8000/health/ready   (TASKS_PORT=8001 to use another port)
+#   docker compose down -v
+
+x-database-url: &database-url
+  TASKS_DATABASE_URL: postgresql://tasks:local-only-password@db:5432/tasks
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: tasks
+      POSTGRES_PASSWORD: local-only-password
+      POSTGRES_DB: tasks
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "tasks"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  # One-off job: apply migrations once, then exit. The API waits for it to succeed.
+  migrate:
+    build: .
+    image: task-track-phase04
+    command: ["alembic", "upgrade", "head"]
+    environment: *database-url
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    build: .
+    image: task-track-phase04
+    environment: *database-url
+    ports:
+      - "127.0.0.1:${TASKS_PORT:-8000}:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  pgdata:

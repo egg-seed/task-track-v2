@@ -15,7 +15,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        phase: [phase-01-basic, phase-02-router, phase-03-sqlmodel, phase-04-alembic]
+        phase:
+          - phase-01-basic
+          - phase-02-router
+          - phase-03-sqlmodel
+          - phase-04-alembic
+          - phase-04-async
     defaults:
       run:
         working-directory: ${{ matrix.phase }}
@@ -52,7 +57,11 @@ jobs:
           if-no-files-found: warn
 
   phase04-postgresql:
-    name: Phase 04 on PostgreSQL (migrations and API)
+    name: Phase 04 on PostgreSQL (${{ matrix.phase }})
+    strategy:
+      fail-fast: false
+      matrix:
+        phase: [phase-04-alembic, phase-04-async]
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -70,7 +79,7 @@ jobs:
           --health-retries 10
     defaults:
       run:
-        working-directory: phase-04-alembic
+        working-directory: ${{ matrix.phase }}
     env:
       TASKS_TEST_POSTGRES_URL: postgresql://tasks:tasks-ci-only@localhost:5432/tasks_test
     steps:

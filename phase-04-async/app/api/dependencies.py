@@ -1,0 +1,10 @@
+"""Expose a per-request AsyncSession to route handlers."""
+
+from typing import Annotated
+
+from fastapi import Depends
+from sqlmodel.ext.asyncio.session import AsyncSession
+
+from app.db.session import get_session
+
+SessionDep = Annotated[AsyncSession, Depends(get_session)]

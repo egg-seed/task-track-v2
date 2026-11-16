@@ -1,0 +1,74 @@
+# 第28章: Phase 01 を FastAPI Cloud へデプロイするワークフロー
+#
+# - 手動実行（workflow_dispatch）だけで動く。main への push では動かない
+# - テストに通った後、production 環境の承認を待ってからデプロイする
+# - 必要な設定（production 環境に登録する）:
+#     Secrets:   FASTAPI_CLOUD_TOKEN, FASTAPI_CLOUD_APP_ID
+#     Variables: FASTAPI_CLOUD_APP_URL（例: https://<アプリのスラッグ>.fastapicloud.dev）
+name: Deploy Phase 01 to FastAPI Cloud
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# 本番へのデプロイを同時に1つだけにする。実行中のデプロイは途中で止めない
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Test before deploy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: phase-01-basic
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+      - name: Install Python 3.14
+        run: uv python install 3.14
+      - name: Sync locked dependencies
+        run: uv sync --locked
+      - name: Lint
+        run: uv run ruff check .
+      - name: Type check
+        run: uv run mypy app tests
+      - name: Tests
+        run: uv run pytest -q
+
+  deploy:
+    name: Deploy to production
+    needs: test
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ vars.FASTAPI_CLOUD_APP_URL }}
+    defaults:
+      run:
+        working-directory: phase-01-basic
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+      - name: Deploy
+        run: uv run fastapi deploy
+        env:
+          FASTAPI_CLOUD_TOKEN: ${{ secrets.FASTAPI_CLOUD_TOKEN }}
+          FASTAPI_CLOUD_APP_ID: ${{ secrets.FASTAPI_CLOUD_APP_ID }}
+      - name: Smoke test
+        env:
+          APP_URL: ${{ vars.FASTAPI_CLOUD_APP_URL }}
+        run: |
+          for _ in $(seq 1 30); do
+            if curl --fail --silent "$APP_URL/health" | grep -q '"status":"ok"'; then
+              echo "Health check passed: $APP_URL/health"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Health check failed: $APP_URL/health" >&2
+          exit 1

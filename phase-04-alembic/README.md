@@ -48,4 +48,22 @@ docker exec tasks-pg psql -U tasks -c 'CREATE DATABASE tasks_test'
 TASKS_TEST_POSTGRES_URL=postgresql://tasks:devpass@localhost:5432/tasks_test uv run pytest -q
 ```
 
+## ログとヘルスチェック（第29章）
+
+`app/observability.py` は、標準ライブラリだけで次のことを行います。
+
+- リクエストごとに、1行のJSONログ（`app.request`）を標準出力に書く。項目は `request_id`、`method`、`route`（`/tasks/{task_id}` のようなテンプレート）、`status_code`、`duration_ms`
+- レスポンスに `X-Request-ID` ヘッダーを付ける。リクエストの `X-Request-ID` は、英数字と `._-` だけの64文字以内なら引き継ぎ、それ以外はサーバーで生成する
+- 想定外の例外は、トレースバックをログに残し、利用者には `{"detail": "Internal Server Error", "request_id": "..."}` だけを返す
+- ヘッダー、クエリ文字列、リクエスト本文はログに書かない。クエリ文字列を含むUvicornのアクセスログは止める
+
+ヘルスチェックは2つあります。
+
+| パス | 確かめること | DBが止まっているとき |
+| --- | --- | --- |
+| `/health` | プロセスが応答するか（liveness） | 200 |
+| `/health/ready` | DBに `SELECT 1` を実行できるか（readiness） | 503 |
+
+ログレベルは `TASKS_LOG_LEVEL`（既定は `INFO`）で変えられます。
+
 `migrations/versions` のリビジョンは手動検証済みのコードとして保存しています。自動生成された変更は、適用前に必ずレビューします。フェーズは教育用サンプルであり、運用DBのバックアップ・復元や無停止変更を保証するものではありません。

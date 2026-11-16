@@ -27,9 +27,17 @@ Phase 03では学習のため`SQLModel.metadata.create_all()`を使用します�
 - `app/db/session.py`: DBエンジンとSession
 - `app/repositories/task.py`: DBへのCRUD
 - `app/api/routes/tasks.py`: HTTP処理
-- `tests/unit/`: Schema検証
+- `tests/unit/`: Schema検証、教材の単体テスト
 - `tests/integration/`: Repository・SQLiteテスト
 - `tests/api/`: HTTP契約テスト
+
+## テーブルモデルが確かめること・確かめないこと（第15章）
+
+`tutorials/table_model_demo.py` は、`create_all()` が送る `CREATE TABLE`、コンストラクタと `model_validate()` の検証の違い、SQLiteが `VARCHAR(100)` の長さを強制しないこと、`create_all()` が既存テーブルに列を足さないことを表示します。DBは一時ディレクトリとメモリ上にだけ作るため、`tasks.db` には触れません。
+
+```bash
+uv run python -m tutorials.table_model_demo
+```
 
 ## リレーションシップとN+1問題（第17章）
 

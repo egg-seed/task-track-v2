@@ -16,10 +16,10 @@ def database_url() -> str:
 
 def build_engine(url: str | None = None) -> Engine:
     db_url = url if url is not None else database_url()
-    return create_engine(
-        db_url,
-        connect_args={"check_same_thread": False} if db_url.startswith("sqlite:") else {},
-    )
+    if db_url.startswith("sqlite:"):
+        return create_engine(db_url, connect_args={"check_same_thread": False})
+    # Server DBs (PostgreSQL, etc.) may close idle connections; check before reuse.
+    return create_engine(db_url, pool_pre_ping=True)
 
 
 engine = build_engine()

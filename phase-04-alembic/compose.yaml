@@ -1,4 +1,4 @@
-# Chapter 25: run Phase 04 with PostgreSQL in containers, locally.
+# Chapter 27: run Phase 04 with PostgreSQL in containers, locally.
 # The password below is for local experiments only. Never reuse it.
 #
 #   docker compose up --build -d

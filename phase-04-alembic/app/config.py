@@ -1,4 +1,4 @@
-"""Typed settings read from environment variables and an optional .env file (Chapter 24)."""
+"""Typed settings read from environment variables and an optional .env file (Chapter 26)."""
 
 from typing import Literal, Self
 
@@ -29,7 +29,7 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices("TASKS_DATABASE_URL", "DATABASE_URL"),
     )
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
-    # Origins whose browser JavaScript may call this API (Chapter 18). JSON list in the env var:
+    # Origins whose browser JavaScript may call this API (Chapter 20). JSON list in the env var:
     # TASKS_CORS_ORIGINS='["https://kanban.example.com"]'
     cors_origins: list[str] = Field(default_factory=lambda: list(DEFAULT_CORS_ORIGINS))
 

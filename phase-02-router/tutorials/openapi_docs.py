@@ -1,4 +1,4 @@
-"""Customise what Swagger UI shows (Chapter 9).
+"""Customise what Swagger UI shows (Chapter 10).
 
 An independent example: the Phase 02 app in app/ is not changed.
 

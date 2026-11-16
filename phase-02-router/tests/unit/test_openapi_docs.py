@@ -1,4 +1,4 @@
-"""What the customised app puts into OpenAPI, and therefore into Swagger UI (Chapter 9)."""
+"""What the customised app puts into OpenAPI, and therefore into Swagger UI (Chapter 10)."""
 
 from typing import Any
 

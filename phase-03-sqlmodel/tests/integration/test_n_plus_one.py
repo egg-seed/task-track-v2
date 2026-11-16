@@ -1,4 +1,4 @@
-"""Count the SQL statements each loading strategy sends (Chapter 15)."""
+"""Count the SQL statements each loading strategy sends (Chapter 17)."""
 
 from collections.abc import Callable
 

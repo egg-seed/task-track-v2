@@ -1,0 +1,168 @@
+:root {
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --text: #1f2933;
+  --muted: #616e7c;
+  --border: #d9dee3;
+  --accent: #2563eb;
+  --todo: #64748b;
+  --doing: #d97706;
+  --done: #16a34a;
+  --error-bg: #fef2f2;
+  --error-text: #b91c1c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px 16px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+}
+
+.page-header,
+.new-task,
+.message,
+.board {
+  max-width: 1080px;
+  margin: 0 auto 16px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.api-url {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.new-task {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.new-task label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.new-task input {
+  width: min(360px, 70vw);
+}
+
+input,
+select,
+button {
+  font: inherit;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+button {
+  cursor: pointer;
+}
+
+.new-task button[type="submit"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.message {
+  padding: 10px 14px;
+  background: var(--error-bg);
+  color: var(--error-text);
+  border-radius: 6px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 720px) {
+  .board {
+    grid-template-columns: 1fr;
+  }
+}
+
+.column {
+  padding: 12px;
+  background: #ebecf0;
+  border-radius: 8px;
+  border-top: 4px solid var(--todo);
+}
+
+.column[data-status="DOING"] {
+  border-top-color: var(--doing);
+}
+
+.column[data-status="DONE"] {
+  border-top-color: var(--done);
+}
+
+.column h2 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+}
+
+.count {
+  color: var(--muted);
+  font-weight: normal;
+}
+
+.cards {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  padding: 10px 12px;
+  background: var(--surface);
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 12%);
+}
+
+.card-title {
+  margin: 0 0 6px;
+  overflow-wrap: anywhere;
+}
+
+.priority {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.actions button {
+  padding: 2px 10px;
+  font-size: 0.85rem;
+}

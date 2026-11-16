@@ -6,6 +6,8 @@ from pydantic import AliasChoices, Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_DATABASE_URL = "sqlite:///./tasks.db"
+# Where the Kanban frontend (frontend/, Chapter 1) runs during local development.
+DEFAULT_CORS_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
 
 
 class Settings(BaseSettings):
@@ -27,6 +29,9 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices("TASKS_DATABASE_URL", "DATABASE_URL"),
     )
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
+    # Origins whose browser JavaScript may call this API (Chapter 18). JSON list in the env var:
+    # TASKS_CORS_ORIGINS='["https://kanban.example.com"]'
+    cors_origins: list[str] = Field(default_factory=lambda: list(DEFAULT_CORS_ORIGINS))
 
     @model_validator(mode="after")
     def check_production_database(self) -> Self:

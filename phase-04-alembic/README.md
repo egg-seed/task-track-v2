@@ -20,7 +20,15 @@ uv run fastapi dev
 
 手順は `uv run alembic upgrade head`。直前のスキーマを検証する場合は `uv run alembic downgrade 0001` を使用します。ただし実運用環境では事前バックアップと手順確認が必須です。
 
-`TASKS_DATABASE_URL` 環境変数はFastAPI本体とAlembicで共通です。未設定のときは `DATABASE_URL`（FastAPI CloudのNeon連携が設定する名前）を読み、どちらもなければ `sqlite:///./tasks.db` を使います。テストは実ファイルのSQLiteをテストごとに作成し、Alembicで初期化します。
+設定は `app/config.py` の `Settings`（pydantic-settings）が、環境変数と `.env` ファイルから読みます（第24章）。FastAPI本体とAlembicは同じ設定を使います。
+
+| 環境変数 | 既定値 | 内容 |
+| --- | --- | --- |
+| `TASKS_ENV` | `development` | `development`・`test`・`production`。`production` では、サーバーのDBが設定されていないと起動しない |
+| `TASKS_DATABASE_URL` | なし（`sqlite:///./tasks.db`） | DBの接続先。未設定なら `DATABASE_URL`（FastAPI CloudのNeon連携が設定する名前）を読む |
+| `TASKS_LOG_LEVEL` | `INFO` | `DEBUG`・`INFO`・`WARNING`・`ERROR`・`CRITICAL` |
+
+手元で `.env` を使う場合は `cp .env.example .env` で作ります。`.env` はGit、Docker、`fastapi deploy` のいずれにも含まれません。環境変数を設定した場合は、`.env` より環境変数が優先されます。テストは実ファイルのSQLiteをテストごとに作成し、Alembicで初期化します。
 
 ```bash
 uv run pytest -q

@@ -1,25 +1,23 @@
 """Engine and per-request Session. Tables are created by Alembic."""
 
-import os
 from collections.abc import Generator
 
 from fastapi import Request
 from sqlalchemy.engine import Engine
 from sqlmodel import Session, create_engine
 
-DEFAULT_DATABASE_URL = "sqlite:///./tasks.db"
+from app.config import DEFAULT_DATABASE_URL, load_settings
+
+__all__ = ["DEFAULT_DATABASE_URL", "build_engine", "database_url", "engine", "get_session"]
 
 
 def database_url() -> str:
     """Return the DB URL: TASKS_DATABASE_URL, then DATABASE_URL, then local SQLite.
 
     DATABASE_URL is the name FastAPI Cloud's Neon integration injects (Chapter 27).
+    The rules live in app.config.Settings (Chapter 24).
     """
-    return (
-        os.environ.get("TASKS_DATABASE_URL")
-        or os.environ.get("DATABASE_URL")
-        or DEFAULT_DATABASE_URL
-    )
+    return load_settings().resolved_database_url()
 
 
 def build_engine(url: str | None = None) -> Engine:

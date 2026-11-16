@@ -5,7 +5,8 @@
 #   curl http://127.0.0.1:8000/health/ready   (TASKS_PORT=8001 to use another port)
 #   docker compose down -v
 
-x-database-url: &database-url
+x-app-environment: &app-environment
+  TASKS_ENV: production
   TASKS_DATABASE_URL: postgresql://tasks:local-only-password@db:5432/tasks
 
 services:
@@ -28,7 +29,7 @@ services:
     build: .
     image: task-track-phase04
     command: ["alembic", "upgrade", "head"]
-    environment: *database-url
+    environment: *app-environment
     depends_on:
       db:
         condition: service_healthy
@@ -36,7 +37,7 @@ services:
   api:
     build: .
     image: task-track-phase04
-    environment: *database-url
+    environment: *app-environment
     ports:
       - "127.0.0.1:${TASKS_PORT:-8000}:8000"
     depends_on:

@@ -20,13 +20,32 @@ uv run fastapi dev
 
 手順は `uv run alembic upgrade head`。直前のスキーマを検証する場合は `uv run alembic downgrade 0001` を使用します。ただし実運用環境では事前バックアップと手順確認が必須です。
 
-`TASKS_DATABASE_URL` 環境変数はFastAPI本体とAlembicで共通です。テストは実ファイルのSQLiteをテストごとに作成し、Alembicで初期化します。
+`TASKS_DATABASE_URL` 環境変数はFastAPI本体とAlembicで共通です。未設定のときは `DATABASE_URL`（FastAPI CloudのNeon連携が設定する名前）を読み、どちらもなければ `sqlite:///./tasks.db` を使います。テストは実ファイルのSQLiteをテストごとに作成し、Alembicで初期化します。
 
 ```bash
 uv run pytest -q
 uv run ruff check .
 uv run ruff format --check .
 uv run mypy app tests
+```
+
+## PostgreSQLで試す（第27章）
+
+`psycopg`（v3）を依存関係に含めているので、`TASKS_DATABASE_URL` に `postgresql://` で始まるURLを指定するとPostgreSQLに接続します。Dockerで試す例です。
+
+```bash
+docker run -d --rm --name tasks-pg -e POSTGRES_USER=tasks -e POSTGRES_PASSWORD=devpass \
+  -e POSTGRES_DB=tasks -p 5432:5432 postgres:18
+export TASKS_DATABASE_URL=postgresql://tasks:devpass@localhost:5432/tasks
+uv run alembic upgrade head
+uv run fastapi dev
+```
+
+PostgreSQLでのマイグレーションとAPIのテストは、`_test` で終わる名前のDBを用意して実行します。テストはDBの中身を毎回消すので、ほかの名前のDBは拒否します。
+
+```bash
+docker exec tasks-pg psql -U tasks -c 'CREATE DATABASE tasks_test'
+TASKS_TEST_POSTGRES_URL=postgresql://tasks:devpass@localhost:5432/tasks_test uv run pytest -q
 ```
 
 `migrations/versions` のリビジョンは手動検証済みのコードとして保存しています。自動生成された変更は、適用前に必ずレビューします。フェーズは教育用サンプルであり、運用DBのバックアップ・復元や無停止変更を保証するものではありません。

@@ -24,3 +24,6 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     op.drop_table("task")
+    # PostgreSQL keeps the ENUM type after DROP TABLE; drop it so upgrade can run again.
+    if op.get_context().dialect.name == "postgresql":
+        op.execute("DROP TYPE IF EXISTS taskstatus")

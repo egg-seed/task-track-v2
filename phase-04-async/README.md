@@ -62,6 +62,15 @@ BENCH_MODE=sync uv run uvicorn bench.wait_app:app --port 8766
 uv run python bench/load.py 100
 ```
 
-`BENCH_POOL_SIZE=50` を付けると、コネクションプールを50本にします（既定は5本＋超過分10本）。測るときは、同期版と非同期版を同時に起動しないでください。両方の接続がPostgreSQLの同時接続数の上限（既定100）を取り合います。
+`BENCH_POOL_SIZE=50` を付けると、コネクションプールを50本にします（既定は5本＋超過分10本）。
+
+同期版には、DB接続を `yield` の依存関係から受け取る `/wait-dep` もあります。`load.py` に `--dep` を付けると `/wait-dep` を呼び、`--probe` を付けると負荷をかけている最中の `GET /health` の応答時間も表示します。`BENCH_LIMIT=15` を付けて起動すると、この依存関係に `Depends(max_concurrency=15)` をかけます。
+
+```bash
+BENCH_MODE=sync BENCH_LIMIT=15 uv run uvicorn bench.wait_app:app --port 8766
+uv run python bench/load.py 100 --dep --probe
+```
+
+`BENCH_LIMIT` なしで `/wait-dep` に55件以上を同時に送ると、スレッド（上限40本）と接続（15本）を取り合って止まり、30秒後に `QueuePool limit ... timed out` の500エラーになります。詳しくは第12章のコラムを参照してください。測るときは、同期版と非同期版を同時に起動しないでください。両方の接続がPostgreSQLの同時接続数の上限（既定100）を取り合います。
 
 非同期にしても、1件ずつのクエリが速くなるわけではありません。DBの応答を待つ間に、同じイベントループでほかのリクエストを進められる点が違いです。

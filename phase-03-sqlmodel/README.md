@@ -30,3 +30,17 @@ Phase 03では学習のため`SQLModel.metadata.create_all()`を使用します�
 - `tests/unit/`: Schema検証
 - `tests/integration/`: Repository・SQLiteテスト
 - `tests/api/`: HTTP契約テスト
+
+## リレーションシップとN+1問題（第15章）
+
+`tutorials/` は、Task APIとは独立した1対多の例（Project・WorkItem）です。`tutorials/n_plus_one.py` を実行すると、関連の読み込み方ごとに発行されるSQLと、その回数を表示します。
+
+```bash
+uv run python -m tutorials.n_plus_one
+```
+
+- 既定の遅延読み込み：1 + N 回（N＝プロジェクトの数）
+- `selectinload`：2回（`WHERE project_id IN (...)` でまとめて読む）
+- `joinedload`：1回（`LEFT OUTER JOIN`。結果に `unique()` が必要）
+
+`tests/integration/test_n_plus_one.py` は、この回数をテストで確かめます。`raiseload` で、隠れた遅延読み込みをエラーにする例も含みます。

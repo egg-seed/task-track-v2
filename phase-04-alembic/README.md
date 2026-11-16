@@ -20,7 +20,7 @@ uv run fastapi dev
 
 手順は `uv run alembic upgrade head`。直前のスキーマを検証する場合は `uv run alembic downgrade 0001` を使用します。ただし実運用環境では事前バックアップと手順確認が必須です。
 
-設定は `app/config.py` の `Settings`（pydantic-settings）が、環境変数と `.env` ファイルから読みます（第24章）。FastAPI本体とAlembicは同じ設定を使います。
+設定は `app/config.py` の `Settings`（pydantic-settings）が、環境変数と `.env` ファイルから読みます（第25章）。FastAPI本体とAlembicは同じ設定を使います。
 
 | 環境変数 | 既定値 | 内容 |
 | --- | --- | --- |
@@ -38,7 +38,7 @@ uv run ruff format --check .
 uv run mypy app tests
 ```
 
-## PostgreSQLで試す（第27章）
+## PostgreSQLで試す（第28章）
 
 `psycopg`（v3）を依存関係に含めているので、`TASKS_DATABASE_URL` に `postgresql://` で始まるURLを指定するとPostgreSQLに接続します。Dockerで試す例です。
 
@@ -57,7 +57,7 @@ docker exec tasks-pg psql -U tasks -c 'CREATE DATABASE tasks_test'
 TASKS_TEST_POSTGRES_URL=postgresql://tasks:devpass@localhost:5432/tasks_test uv run pytest -q
 ```
 
-## ログとヘルスチェック（第29章）
+## ログとヘルスチェック（第30章）
 
 `app/observability.py` は、標準ライブラリだけで次のことを行います。
 
@@ -75,7 +75,7 @@ TASKS_TEST_POSTGRES_URL=postgresql://tasks:devpass@localhost:5432/tasks_test uv 
 
 ログレベルは `TASKS_LOG_LEVEL`（既定は `INFO`）で変えられます。
 
-## 本番向けのコンテナで動かす（第25章）
+## 本番向けのコンテナで動かす（第26章）
 
 `Dockerfile` は本番を想定した構成です。
 

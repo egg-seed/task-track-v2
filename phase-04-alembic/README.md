@@ -27,6 +27,7 @@ uv run fastapi dev
 | `TASKS_ENV` | `development` | `development`・`test`・`production`。`production` では、サーバーのDBが設定されていないと起動しない |
 | `TASKS_DATABASE_URL` | なし（`sqlite:///./tasks.db`） | DBの接続先。未設定なら `DATABASE_URL`（FastAPI CloudのNeon連携が設定する名前）を読む |
 | `TASKS_LOG_LEVEL` | `INFO` | `DEBUG`・`INFO`・`WARNING`・`ERROR`・`CRITICAL` |
+| `TASKS_CORS_ORIGINS` | `["http://localhost:5173", "http://127.0.0.1:5173"]` | ブラウザーからAPIを呼んでよいオリジン（JSONの配列）。既定はカンバン画面（`frontend/`）の開発用URL |
 
 手元で `.env` を使う場合は `cp .env.example .env` で作ります。`.env` はGit、Docker、`fastapi deploy` のいずれにも含まれません。環境変数を設定した場合は、`.env` より環境変数が優先されます。テストは実ファイルのSQLiteをテストごとに作成し、Alembicで初期化します。
 

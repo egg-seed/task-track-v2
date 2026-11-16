@@ -2,10 +2,13 @@
 
 Zenn の技術書「実務で役立つAPI設計と実装 第2版」のサンプルコードです。
 
+題材は、タスクを `TODO`・`DOING`・`DONE` の3列で管理する**カンバンアプリ**です。ブラウザーで動く画面（`frontend/`）が、FastAPIで作るタスク管理API（Phase 01〜04）を呼び出します。書籍が扱うのはAPI（サーバー側）で、画面は動作を確かめるために用意しています。
+
 読者が章の途中から再現できるよう、学習の区切りごとに**独立した動作サンプル**を管理します。
 
 | サンプル | ディレクトリ | 内容 |
 |---|---|---|
+| カンバン画面 | [frontend](frontend/) | Phase 04のAPIを呼ぶ、ビルド不要のHTML・JavaScript |
 | Phase 01 | [phase-01-basic](phase-01-basic/) | 単一`main.py`でタスク管理APIのCRUDの基本を学ぶ |
 | Phase 02 | [phase-02-router](phase-02-router/) | 同じTask APIをRouter・Schema・依存性注入に分離 |
 | Phase 03 | [phase-03-sqlmodel](phase-03-sqlmodel/) | SQLModel・Session・Repositoryを導入 |

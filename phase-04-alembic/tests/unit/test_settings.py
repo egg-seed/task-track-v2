@@ -17,7 +17,13 @@ PHASE_DIR = Path(__file__).parents[2]
 @pytest.fixture(autouse=True)
 def clean_environment(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Generator[None]:
     # Start every test without TASKS_* / DATABASE_URL and without a developer's .env file.
-    for name in ("TASKS_ENV", "TASKS_DATABASE_URL", "DATABASE_URL", "TASKS_LOG_LEVEL"):
+    for name in (
+        "TASKS_ENV",
+        "TASKS_DATABASE_URL",
+        "DATABASE_URL",
+        "TASKS_LOG_LEVEL",
+        "TASKS_CORS_ORIGINS",
+    ):
         monkeypatch.delenv(name, raising=False)
     monkeypatch.chdir(tmp_path)
     yield
@@ -97,3 +103,9 @@ def test_app_refuses_to_start_in_production_without_database(tmp_path: Path) -> 
     )
     assert result.returncode != 0
     assert "required in production" in result.stderr
+
+
+def test_cors_origins_default_and_json_list(monkeypatch: pytest.MonkeyPatch) -> None:
+    assert Settings().cors_origins == ["http://localhost:5173", "http://127.0.0.1:5173"]
+    monkeypatch.setenv("TASKS_CORS_ORIGINS", '["https://kanban.example.com"]')
+    assert Settings().cors_origins == ["https://kanban.example.com"]

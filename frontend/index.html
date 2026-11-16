@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>カンバン - タスク管理API</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>カンバン</h1>
+      <p class="api-url">API: <code id="api-base"></code></p>
+    </header>
+
+    <form id="new-task" class="new-task">
+      <label>
+        タイトル
+        <input name="title" required maxlength="100" placeholder="設計レビューを行う" />
+      </label>
+      <label>
+        優先度
+        <select name="priority">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </label>
+      <button type="submit">追加</button>
+    </form>
+
+    <p id="message" class="message" role="status" hidden></p>
+
+    <main class="board">
+      <section class="column" data-status="TODO">
+        <h2>TODO <span class="count"></span></h2>
+        <ul class="cards"></ul>
+      </section>
+      <section class="column" data-status="DOING">
+        <h2>DOING <span class="count"></span></h2>
+        <ul class="cards"></ul>
+      </section>
+      <section class="column" data-status="DONE">
+        <h2>DONE <span class="count"></span></h2>
+        <ul class="cards"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

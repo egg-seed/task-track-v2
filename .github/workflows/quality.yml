@@ -188,3 +188,34 @@ jobs:
       - name: Clean up
         if: always()
         run: docker rm --force phase01-api || true
+
+  phase04-container:
+    name: Phase 04 production image with Compose (PostgreSQL)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: phase-04-alembic
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build and start db, migrate, and api
+        run: docker compose up --build --detach --wait api
+      - name: Migration job finished successfully
+        run: test "$(docker compose ps -a migrate --format '{{.ExitCode}}')" = "0"
+      - name: Readiness and API round trip
+        run: |
+          curl --fail --silent http://127.0.0.1:8000/health/ready | grep -q '"database":"ok"'
+          curl --fail --silent -X POST http://127.0.0.1:8000/tasks \
+            -H 'content-type: application/json' -d '{"title":"from CI"}'
+          curl --fail --silent http://127.0.0.1:8000/tasks | grep -q 'from CI'
+      - name: Runs as a non-root user
+        run: test "$(docker compose exec api id -u)" = "10001"
+      - name: Stops gracefully on SIGTERM
+        run: |
+          docker compose stop api
+          test "$(docker compose ps -a api --format '{{.ExitCode}}')" = "0"
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs
+      - name: Clean up
+        if: always()
+        run: docker compose down --volumes

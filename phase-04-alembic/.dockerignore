@@ -1,0 +1,17 @@
+.venv/
+.git/
+.env
+.env.*
+!.env.example
+.fastapicloud/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.db
+*.pyc
+tests/
+bench/
+README.md
+coverage.xml
+.coverage

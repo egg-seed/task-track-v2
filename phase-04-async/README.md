@@ -47,4 +47,21 @@ docker run -d --rm --name tasks-pg -e POSTGRES_USER=tasks -e POSTGRES_PASSWORD=d
 TASKS_TEST_POSTGRES_URL=postgresql://tasks:devpass@localhost:5432/tasks_test uv run pytest -q
 ```
 
+## 同期と非同期の経過時間を比べる（第12章コラム）
+
+`bench/wait_app.py` は、1リクエストごとにPostgreSQLで `SELECT pg_sleep(0.5)` を実行するだけのアプリです。`BENCH_MODE` で `def`（同期）と `async def`（非同期）を切り替えます。`bench/load.py` は、同時に100件のリクエストを送って経過時間を表示します。
+
+```bash
+docker run -d --rm --name tasks-pg -e POSTGRES_USER=tasks -e POSTGRES_PASSWORD=devpass \
+  -e POSTGRES_DB=tasks -p 5432:5432 postgres:18
+export TASKS_DATABASE_URL=postgresql://tasks:devpass@localhost:5432/tasks
+
+# ターミナル1：同期版を起動（非同期版は BENCH_MODE=async）
+BENCH_MODE=sync uv run uvicorn bench.wait_app:app --port 8766
+# ターミナル2：同時に100件送る
+uv run python bench/load.py 100
+```
+
+`BENCH_POOL_SIZE=50` を付けると、コネクションプールを50本にします（既定は5本＋超過分10本）。測るときは、同期版と非同期版を同時に起動しないでください。両方の接続がPostgreSQLの同時接続数の上限（既定100）を取り合います。
+
 非同期にしても、1件ずつのクエリが速くなるわけではありません。DBの応答を待つ間に、同じイベントループでほかのリクエストを進められる点が違いです。

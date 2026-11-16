@@ -11,7 +11,15 @@ DEFAULT_DATABASE_URL = "sqlite:///./tasks.db"
 
 
 def database_url() -> str:
-    return os.environ.get("TASKS_DATABASE_URL", DEFAULT_DATABASE_URL)
+    """Return the DB URL: TASKS_DATABASE_URL, then DATABASE_URL, then local SQLite.
+
+    DATABASE_URL is the name FastAPI Cloud's Neon integration injects (Chapter 27).
+    """
+    return (
+        os.environ.get("TASKS_DATABASE_URL")
+        or os.environ.get("DATABASE_URL")
+        or DEFAULT_DATABASE_URL
+    )
 
 
 def build_engine(url: str | None = None) -> Engine:

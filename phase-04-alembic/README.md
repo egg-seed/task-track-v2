@@ -20,7 +20,7 @@ uv run fastapi dev
 
 手順は `uv run alembic upgrade head`。直前のスキーマを検証する場合は `uv run alembic downgrade 0001` を使用します。ただし実運用環境では事前バックアップと手順確認が必須です。
 
-`TASKS_DATABASE_URL` 環境変数はFastAPI本体とAlembicで共通です。テストは実ファイルのSQLiteをテストごとに作成し、Alembicで初期化します。
+`TASKS_DATABASE_URL` 環境変数はFastAPI本体とAlembicで共通です。未設定のときは `DATABASE_URL`（FastAPI CloudのNeon連携が設定する名前）を読み、どちらもなければ `sqlite:///./tasks.db` を使います。テストは実ファイルのSQLiteをテストごとに作成し、Alembicで初期化します。
 
 ```bash
 uv run pytest -q

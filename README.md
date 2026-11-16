@@ -10,6 +10,7 @@ Zenn の技術書「実務で役立つAPI設計と実装 第2版」のサンプ�
 | Phase 02 | [phase-02-router](phase-02-router/) | 同じTask APIをRouter・Schema・依存性注入に分離 |
 | Phase 03 | [phase-03-sqlmodel](phase-03-sqlmodel/) | SQLModel・Session・Repositoryを導入 |
 | Phase 04 | [phase-04-alembic](phase-04-alembic/) | Alembicによるスキーマ変更 |
+| 認証の基本 | [auth-basics](auth-basics/) | APIキーとOAuth2パスワードフローによる認証、所有者による認可（第17章） |
 | 発展編 | [cognito-auth](cognito-auth/) | Amazon Cognitoのアクセストークン検証と認可 |
 | 同期・非同期 | [sync-async-demo.py](sync-async-demo.py) | 標準ライブラリだけで動くasyncioのデモ |
 

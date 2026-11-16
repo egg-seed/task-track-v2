@@ -81,6 +81,36 @@ jobs:
             --cov-report="markdown-append:$GITHUB_STEP_SUMMARY" \
             --cov-fail-under=80
 
+  auth-basics:
+    name: Auth basics (API key / OAuth2 password) tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: auth-basics
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+      - name: Install Python 3.14
+        run: uv python install 3.14
+      - name: Sync locked dependencies
+        run: uv sync --locked
+      - name: Lint
+        run: uv run ruff check .
+      - name: Format check
+        run: uv run ruff format --check .
+      - name: Type check
+        run: uv run mypy
+      - name: Tests and coverage
+        run: |
+          uv run --locked --with "pytest-cov==7.1.0" pytest -q \
+            --cov=api_key_app --cov=oauth2_app --cov=tasks \
+            --cov-branch \
+            --cov-report=term-missing \
+            --cov-report="markdown-append:$GITHUB_STEP_SUMMARY" \
+            --cov-fail-under=80
+
   async-demo:
     name: Asyncio demo smoke test
     runs-on: ubuntu-latest

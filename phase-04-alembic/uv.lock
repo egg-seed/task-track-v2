@@ -322,6 +322,7 @@ dependencies = [
     { name = "alembic" },
     { name = "fastapi", extra = ["standard"] },
     { name = "psycopg", extra = ["binary"] },
+    { name = "pydantic-settings" },
     { name = "sqlmodel" },
 ]
 
@@ -338,6 +339,7 @@ requires-dist = [
     { name = "alembic", specifier = ">=1.20,<2" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.163,<0.164" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.3,<4" },
+    { name = "pydantic-settings", specifier = ">=2.16,<3" },
     { name = "sqlmodel", specifier = ">=0.0.50,<0.1" },
 ]
 

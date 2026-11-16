@@ -12,7 +12,6 @@ tokens, API keys, or personal data.
 
 import json
 import logging
-import os
 import re
 import sys
 import time
@@ -23,6 +22,8 @@ from datetime import UTC, datetime
 
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
+
+from app.config import load_settings
 
 REQUEST_ID_HEADER = "X-Request-ID"
 # Accept a caller's ID only if it is short and plain; otherwise generate our own.
@@ -68,7 +69,7 @@ def configure_logging(level: str | None = None) -> None:
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(JsonFormatter())
     app_logger.addHandler(handler)
-    app_logger.setLevel(level or os.environ.get("TASKS_LOG_LEVEL", "INFO"))
+    app_logger.setLevel(level or load_settings().log_level)
     app_logger.propagate = False
     logging.getLogger("uvicorn.access").disabled = True
 

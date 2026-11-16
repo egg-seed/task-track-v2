@@ -14,8 +14,8 @@ __all__ = ["DEFAULT_DATABASE_URL", "build_engine", "database_url", "engine", "ge
 def database_url() -> str:
     """Return the DB URL: TASKS_DATABASE_URL, then DATABASE_URL, then local SQLite.
 
-    DATABASE_URL is the name FastAPI Cloud's Neon integration injects (Chapter 27).
-    The rules live in app.config.Settings (Chapter 24).
+    DATABASE_URL is the name FastAPI Cloud's Neon integration injects (Chapter 29).
+    The rules live in app.config.Settings (Chapter 26).
     """
     return load_settings().resolved_database_url()
 

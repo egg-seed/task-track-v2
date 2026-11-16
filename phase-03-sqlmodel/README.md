@@ -31,7 +31,7 @@ Phase 03では学習のため`SQLModel.metadata.create_all()`を使用します�
 - `tests/integration/`: Repository・SQLiteテスト
 - `tests/api/`: HTTP契約テスト
 
-## リレーションシップとN+1問題（第16章）
+## リレーションシップとN+1問題（第17章）
 
 `tutorials/` は、Task APIとは独立した1対多の例（Project・WorkItem）です。`tutorials/n_plus_one.py` を実行すると、関連の読み込み方ごとに発行されるSQLと、その回数を表示します。
 

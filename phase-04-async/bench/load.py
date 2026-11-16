@@ -1,4 +1,4 @@
-"""Send N concurrent requests to /wait and print the elapsed time (Chapter 12 column).
+"""Send N concurrent requests to /wait and print the elapsed time (Chapter 14 column).
 
 uv run python bench/load.py 100
 uv run python bench/load.py 100 --probe   # also time GET /health while /wait is busy

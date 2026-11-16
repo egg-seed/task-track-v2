@@ -1,4 +1,4 @@
-"""A tiny app that waits on PostgreSQL, to compare def and async def (Chapter 12 column).
+"""A tiny app that waits on PostgreSQL, to compare def and async def (Chapter 14 column).
 
 Each request runs SELECT pg_sleep(0.5). Start one mode at a time:
 

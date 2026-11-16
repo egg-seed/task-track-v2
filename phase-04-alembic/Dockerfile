@@ -1,4 +1,4 @@
-# Phase 04 production image (Chapter 25): multi-stage build, non-root user.
+# Phase 04 production image (Chapter 27): multi-stage build, non-root user.
 
 # --- Stage 1: build the virtual environment with uv -------------------------
 FROM python:3.14-slim AS builder
@@ -34,7 +34,7 @@ ENV PATH="/app/.venv/bin:$PATH" PYTHONUNBUFFERED=1
 USER app
 EXPOSE 8000
 
-# Liveness only: /health does not touch the database (Chapter 29).
+# Liveness only: /health does not touch the database (Chapter 31).
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
     CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"]
 

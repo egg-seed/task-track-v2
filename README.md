@@ -57,7 +57,7 @@ uv run mypy app tests
 
 GitHub ActionsはMatrixでPhase 01〜04を独立して検証します。Python 3.14環境で各フェーズのuv同期、Ruff、mypy、pytestを実行します。Phase 01のDockerビルドとヘルスチェック、Cognitoサンプルのオフラインテスト、asyncioデモもCI対象です。
 
-`.github/workflows/deploy-phase01.yml` は、Phase 01をFastAPI Cloudへデプロイするワークフローです（第31章）。手動実行（workflow_dispatch）でだけ動き、テストに通った後、GitHubの `production` 環境での承認を待ってからデプロイします。動かすには、`production` 環境にSecrets（`FASTAPI_CLOUD_TOKEN`、`FASTAPI_CLOUD_APP_ID`）とVariables（`FASTAPI_CLOUD_APP_URL`）を登録してください。
+`.github/workflows/deploy-phase01.yml` は、Phase 01をFastAPI Cloudへデプロイするワークフローです（第31章）。手動実行（workflow_dispatch）でだけ動き、`quality.yml` のチェック（PRと同じもの）をこのコミットでもう一度すべて実行し、通った後にGitHubの `production` 環境での承認を待ってからデプロイします。動かすには、`production` 環境にSecrets（`FASTAPI_CLOUD_TOKEN`、`FASTAPI_CLOUD_APP_ID`）とVariables（`FASTAPI_CLOUD_APP_URL`）を登録してください。
 
 各フェーズは書籍の完成時点のスナップショットとして維持し、不要な構成変更は行わず、必要な修正はすべてCIで確認します。
 

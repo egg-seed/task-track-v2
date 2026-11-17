@@ -5,6 +5,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Lets deploy-phase01.yml run exactly these checks before it deploys.
+  workflow_call:
 
 permissions:
   contents: read

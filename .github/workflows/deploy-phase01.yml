@@ -1,7 +1,7 @@
 # 第31章: Phase 01 を FastAPI Cloud へデプロイするワークフロー
 #
 # - 手動実行（workflow_dispatch）だけで動く。main への push では動かない
-# - テストに通った後、production 環境の承認を待ってからデプロイする
+# - PR と同じ quality.yml のチェックがすべて通った後、production 環境の承認を待ってからデプロイする
 # - 必要な設定（production 環境に登録する）:
 #     Secrets:   FASTAPI_CLOUD_TOKEN, FASTAPI_CLOUD_APP_ID
 #     Variables: FASTAPI_CLOUD_APP_URL（例: https://<アプリのスラッグ>.fastapicloud.dev）
@@ -19,31 +19,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  test:
-    name: Test before deploy
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: phase-01-basic
-    steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10.3.3
-        with:
-          enable-cache: true
-      - name: Install Python 3.14
-        run: uv python install 3.14
-      - name: Sync locked dependencies
-        run: uv sync --locked
-      - name: Lint
-        run: uv run ruff check .
-      - name: Type check
-        run: uv run mypy app tests
-      - name: Tests
-        run: uv run pytest -q
+  # PRと同じ quality.yml を、このコミットでもう一度すべて実行する
+  quality:
+    name: Quality checks
+    uses: ./.github/workflows/quality.yml
 
   deploy:
     name: Deploy to production
-    needs: test
+    needs: quality
     runs-on: ubuntu-latest
     environment:
       name: production

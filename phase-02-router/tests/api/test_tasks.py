@@ -69,12 +69,15 @@ def test_delete_missing(client: TestClient) -> None:
 @pytest.mark.parametrize(
     "payload",
     [{"title": ""}, {"title": "X" * 101}, {"title": "ok", "status": "INVALID"}],
+    ids=["empty-title", "too-long-title", "unknown-status"],
 )
 def test_invalid_create(client: TestClient, payload: dict[str, str]) -> None:
     assert client.post("/tasks", json=payload).status_code == 422
 
 
-@pytest.mark.parametrize("payload", [{"title": None}, {"status": None}])
+@pytest.mark.parametrize(
+    "payload", [{"title": None}, {"status": None}], ids=["null-title", "null-status"]
+)
 def test_invalid_patch(client: TestClient, payload: dict[str, None]) -> None:
     task = client.post("/tasks", json={"title": "ok"}).json()
     assert client.patch(f"/tasks/{task['id']}", json=payload).status_code == 422

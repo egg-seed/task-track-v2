@@ -28,6 +28,7 @@ def test_patch_description_and_status(client: TestClient) -> None:
     assert result.status_code == 200
     assert result.json()["description"] is None
     assert result.json()["status"] == "DONE"
+    assert result.json()["title"] == "first"
 
 
 def test_delete_and_missing(client: TestClient) -> None:
@@ -44,6 +45,7 @@ def test_missing_update(client: TestClient) -> None:
 @pytest.mark.parametrize(
     "payload",
     [{"title": ""}, {"title": "X" * 101}, {"title": "ok", "status": "BAD"}],
+    ids=["empty-title", "too-long-title", "unknown-status"],
 )
 def test_invalid_create(client: TestClient, payload: dict[str, str]) -> None:
     assert client.post("/tasks", json=payload).status_code == 422

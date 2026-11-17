@@ -49,6 +49,7 @@ async def test_missing_update(client: AsyncClient) -> None:
 @pytest.mark.parametrize(
     "payload",
     [{"title": ""}, {"title": "X" * 101}, {"title": "ok", "status": "BAD"}],
+    ids=["empty-title", "too-long-title", "unknown-status"],
 )
 async def test_invalid_create(client: AsyncClient, payload: dict[str, str]) -> None:
     assert (await client.post("/tasks", json=payload)).status_code == 422

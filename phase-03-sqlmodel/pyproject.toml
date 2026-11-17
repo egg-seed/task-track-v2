@@ -31,6 +31,8 @@ addopts = "-ra"
 target-version = "py314"
 line-length = 100
 src = ["app", "tests"]
+# Chapter 26 keeps deliberate mistakes here; check it only by naming it.
+extend-exclude = ["quality_demo"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

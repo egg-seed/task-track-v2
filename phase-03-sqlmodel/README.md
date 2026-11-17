@@ -93,3 +93,14 @@ uv run python -m tutorials.memory_db_threads
 ```bash
 uv run python -m tutorials.error_order
 ```
+
+## 品質チェックの教材（第26章）
+
+`quality_demo/` には、わざと4種類の問題（未使用のimport、崩れた書式、型の食い違い、計算の誤り）を入れています。Ruff・mypy・pytestが、それぞれどの問題を見つけるかを確かめる教材です。CIで失敗しないよう、`pyproject.toml` でRuffの対象から外し、mypy（`app tests`）とpytest（`tests`）の対象にも含めていません。名前を指定したときだけ検査されます。
+
+```bash
+uv run ruff check quality_demo
+uv run ruff format --diff quality_demo
+uv run mypy quality_demo
+uv run pytest -q quality_demo
+```

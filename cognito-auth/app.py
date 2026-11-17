@@ -10,6 +10,16 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWKClient
 from jwt.exceptions import InvalidTokenError, PyJWKClientError
 
+from tasks import (
+    AUTH_ERROR_RESPONSES,
+    TASK_ACCESS_ERROR_RESPONSES,
+    Task,
+    TaskCreate,
+    create_task,
+    get_owned_task,
+    list_tasks,
+)
+
 app = FastAPI(title="Cognito JWT verification demo")
 bearer = HTTPBearer(auto_error=False)
 
@@ -76,17 +86,32 @@ def current_claims(
     return verify_access_token(credentials.credentials)
 
 
-@app.get("/me")
-def me(claims: Annotated[dict[str, Any], Depends(current_claims)]) -> dict[str, str]:
-    return {"sub": claims["sub"]}
+def current_user(claims: Annotated[dict[str, Any], Depends(current_claims)]) -> str:
+    """Return the verified user's sub. Same role as current_client() in Chapter 20."""
+    sub: str = claims["sub"]
+    return sub
 
 
-@app.get("/users/{owner_sub}/tasks")
-def user_tasks(
-    owner_sub: str,
-    claims: Annotated[dict[str, Any], Depends(current_claims)],
-) -> dict[str, list[str]]:
-    # Simplified ownership example. Real apps must filter DB queries by identity.
-    if claims["sub"] != owner_sub:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
-    return {"tasks": []}
+CurrentUser = Annotated[str, Depends(current_user)]
+
+
+@app.get("/me", responses=AUTH_ERROR_RESPONSES)
+def me(user: CurrentUser) -> dict[str, str]:
+    return {"sub": user}
+
+
+# The routes below are the same as Chapter 20's api_key_app.py.
+# Only the authentication dependency changed: CurrentClient -> CurrentUser.
+@app.get("/tasks", responses=AUTH_ERROR_RESPONSES)
+def read_tasks(user: CurrentUser) -> list[Task]:
+    return list_tasks(owner=user)
+
+
+@app.post("/tasks", status_code=status.HTTP_201_CREATED, responses=AUTH_ERROR_RESPONSES)
+def add_task(payload: TaskCreate, user: CurrentUser) -> Task:
+    return create_task(payload, owner=user)
+
+
+@app.get("/tasks/{task_id}", responses=TASK_ACCESS_ERROR_RESPONSES)
+def read_task(task_id: int, user: CurrentUser) -> Task:
+    return get_owned_task(task_id, owner=user)

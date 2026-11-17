@@ -11,6 +11,7 @@ from fastapi.testclient import TestClient
 from jwt.exceptions import PyJWKClientError
 
 import app as module
+from tasks import reset_tasks
 
 ISSUER = "https://cognito-idp.ap-northeast-1.amazonaws.com/ap-northeast-1_demo"
 
@@ -26,6 +27,7 @@ def cognito_env(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.fixture
 def client() -> TestClient:
+    reset_tasks()
     return TestClient(module.app)
 
 
@@ -126,10 +128,34 @@ def test_jwks_failure_returns_401(client: TestClient, monkeypatch: pytest.Monkey
     assert response.status_code == 401
 
 
-def test_owner_access_and_cross_user_denial(client: TestClient, signer: Signer) -> None:
-    headers = bearer(signer())
-    assert client.get("/users/alice/tasks", headers=headers).status_code == 200
-    assert client.get("/users/bob/tasks", headers=headers).status_code == 403
+def test_task_list_contains_only_own_tasks(client: TestClient, signer: Signer) -> None:
+    alice, bob = bearer(signer(sub="alice-sub")), bearer(signer(sub="bob-sub"))
+    client.post("/tasks", json={"title": "aliceの買い物リスト"}, headers=alice)
+    client.post("/tasks", json={"title": "bobの議事録"}, headers=bob)
+    titles = [task["title"] for task in client.get("/tasks", headers=alice).json()]
+    assert titles == ["aliceの買い物リスト"]
+
+
+def test_created_task_belongs_to_token_sub(client: TestClient, signer: Signer) -> None:
+    response = client.post(
+        "/tasks", json={"title": "牛乳"}, headers=bearer(signer(sub="alice-sub"))
+    )
+    assert response.status_code == 201
+    assert response.json()["owner"] == "alice-sub"
+
+
+def test_other_users_task_returns_403(client: TestClient, signer: Signer) -> None:
+    created = client.post(
+        "/tasks", json={"title": "aliceの買い物リスト"}, headers=bearer(signer(sub="alice-sub"))
+    ).json()
+    alice = client.get(f"/tasks/{created['id']}", headers=bearer(signer(sub="alice-sub")))
+    bob = client.get(f"/tasks/{created['id']}", headers=bearer(signer(sub="bob-sub")))
+    assert alice.status_code == 200
+    assert bob.status_code == 403
+
+
+def test_missing_task_returns_404(client: TestClient, signer: Signer) -> None:
+    assert client.get("/tasks/999", headers=bearer(signer())).status_code == 404
 
 
 def test_jwks_client_uses_issuer_endpoint() -> None:

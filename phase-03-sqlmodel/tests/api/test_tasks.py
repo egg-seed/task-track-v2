@@ -28,6 +28,7 @@ def test_patch_description_and_status(client: TestClient) -> None:
     assert result.status_code == 200
     assert result.json()["description"] is None
     assert result.json()["status"] == "DONE"
+    assert result.json()["title"] == "first"
 
 
 def test_delete_and_missing(client: TestClient) -> None:

@@ -79,3 +79,17 @@ uv run python -m tutorials.n_plus_one
 ```bash
 uv run python -m tutorials.relationship_facts
 ```
+
+## テストの教材（第24章・第25章）
+
+`tutorials/memory_db_threads.py` は、テスト用のインメモリSQLiteを `StaticPool` と `check_same_thread=False` で作る理由を確かめます。既定のまま・`StaticPool` だけ・両方を指定、の3つのEngineで `TestClient` から `POST /tasks` を送り、結果と、接続を作ったスレッドを表示します。
+
+```bash
+uv run python -m tutorials.memory_db_threads
+```
+
+`tutorials/error_order.py` は、存在しないIDと不正な本文を同時に送ったとき、404と422のどちらが返るかを表示します。422を返した後に、タスクが変わっていないことも確かめます。
+
+```bash
+uv run python -m tutorials.error_order
+```

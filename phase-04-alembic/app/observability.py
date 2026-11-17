@@ -1,4 +1,4 @@
-"""Structured JSON logs and a request ID for every request (Chapter 31).
+"""Structured JSON logs and a request ID for every request (Chapter 32).
 
 Only the standard library is used. Each request writes one "request" log line:
 

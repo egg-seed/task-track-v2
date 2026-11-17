@@ -39,7 +39,28 @@ Phase 03では学習のため`SQLModel.metadata.create_all()`を使用します�
 uv run python -m tutorials.table_model_demo
 ```
 
-## リレーションシップとN+1問題（第17章）
+## CRUDで送られるSQL（第16章）
+
+`tutorials/crud_sql.py` は、1件のタスクを `add()`・`flush()`・`commit()`・`delete()` したときのオブジェクトの状態と送られたSQLを表示します。続けて、Repositoryの関数ごとに送られるSQLを表示します。
+
+```bash
+uv run python -m tutorials.crud_sql
+```
+
+## トランザクションと同時更新（第17章）
+
+`tutorials/transactions.py` は、Task APIとは独立した教材用のテーブル（`demo_task_log`・`demo_note`）を使い、次を確かめます。
+
+- 処理ごとに `commit()` すると途中の失敗で半端なデータが残り、最後にまとめて `commit()` すると何も残らない
+- `commit()` に失敗したSessionは、`rollback()` するまで使えない（`PendingRollbackError`）
+- 2つのSessionが同じタスクを読んでから更新すると、先の変更が消える（lost update）
+- `version` 列で更新前の版を確かめると、後の更新を検出でき、HTTPでは409にできる
+
+```bash
+uv run python -m tutorials.transactions
+```
+
+## リレーションシップとN+1問題（第18章）
 
 `tutorials/` は、Task APIとは独立した1対多の例（Project・WorkItem）です。`tutorials/n_plus_one.py` を実行すると、関連の読み込み方ごとに発行されるSQLと、その回数を表示します。
 

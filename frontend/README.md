@@ -22,6 +22,6 @@ uv run python -m http.server 5173
 
 ブラウザーで `http://localhost:5173` を開きます。
 
-画面（5173番ポート）とAPI（8000番ポート）はオリジンが違うので、APIは画面のオリジンをCORSで許可しています。許可するオリジンは、Phase 04の環境変数 `TASKS_CORS_ORIGINS` で変えられます（書籍の第20章）。
+画面（5173番ポート）とAPI（8000番ポート）はオリジンが違うので、APIは画面のオリジンをCORSで許可しています。許可するオリジンは、Phase 04の環境変数 `TASKS_CORS_ORIGINS` で変えられます（書籍の第21章）。
 
 APIのURLを変えるときは、`http://localhost:5173/?api=http://127.0.0.1:8001` のように `api` パラメーターで指定します。

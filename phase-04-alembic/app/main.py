@@ -16,7 +16,7 @@ def create_app(db_engine: Engine = engine) -> FastAPI:
     app = FastAPI(title="Task Track API - Phase 04")
     app.state.db_engine = db_engine
     observability.install(app)
-    # The Kanban frontend runs on another origin (Chapter 20).
+    # The Kanban frontend runs on another origin (Chapter 21).
     app.add_middleware(
         CORSMiddleware,
         allow_origins=load_settings().cors_origins,

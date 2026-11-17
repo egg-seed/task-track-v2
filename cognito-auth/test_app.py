@@ -85,6 +85,7 @@ def test_valid_access_token(client: TestClient, signer: Signer) -> None:
         {"exp": 1},
         {"sub": None},
     ],
+    ids=["id-token", "other-client", "other-issuer", "expired", "no-sub"],
 )
 def test_rejected_claims(client: TestClient, signer: Signer, changes: dict[str, Any]) -> None:
     response = client.get("/me", headers=bearer(signer(**changes)))

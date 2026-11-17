@@ -48,13 +48,15 @@ def make_engine(options: dict[str, Any], opened_in: list[str]) -> Engine:
 
 
 def post_task(engine: Engine) -> str:
-    """POST /tasks through TestClient, as the API tests do."""
+    """POST /tasks through TestClient, as the API tests do, and say where it stopped."""
+    stage = "起動（Lifespan）"
     try:
         with TestClient(create_app(engine)) as client:
+            stage = "POST /tasks"
             response = client.post("/tasks", json={"title": "first"})
-            return f"{response.status_code} {response.json()['title']}"
+            return f"{stage} -> {response.status_code} {response.json()['title']}"
     except Exception as exc:
-        return f"{type(exc).__name__}: {str(exc).splitlines()[0]}"
+        return f"{stage}で失敗 -> {type(exc).__name__}: {str(exc).splitlines()[0]}"
 
 
 def main() -> None:
@@ -64,7 +66,7 @@ def main() -> None:
         engine = make_engine(options, opened_in)
         result = post_task(engine)
         print(f"\n{label}（{type(engine.pool).__name__}）")
-        print(f"  POST /tasks -> {result}")
+        print(f"  {result}")
         print(f"  接続を作ったスレッド: {', '.join(opened_in)}")
         engine.dispose()
 

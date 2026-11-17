@@ -17,18 +17,18 @@ def run(label: str) -> tuple[str, list[str]]:
 
 def test_default_pool_opens_a_new_empty_database_per_thread() -> None:
     result, opened_in = run("既定のまま")
-    assert result.startswith("OperationalError")
+    assert result.startswith("POST /tasksで失敗 -> OperationalError")
     assert "no such table: task" in result
     assert len(opened_in) == 3
 
 
 def test_static_pool_alone_is_refused_by_sqlite() -> None:
     result, opened_in = run("StaticPool だけ")
-    assert result.startswith("ProgrammingError")
+    assert result.startswith("起動（Lifespan）で失敗 -> ProgrammingError")
     assert opened_in == ["MainThread"]
 
 
 def test_static_pool_shared_across_threads_works() -> None:
     result, opened_in = run("StaticPool ＋ check_same_thread=False")
-    assert result == "201 first"
+    assert result == "POST /tasks -> 201 first"
     assert opened_in == ["MainThread"]

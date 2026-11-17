@@ -1,5 +1,3 @@
-"""The only check that runs the code: it finds the wrong calculation."""
-
 from quality_demo.progress import progress_percent
 
 

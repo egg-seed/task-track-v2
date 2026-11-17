@@ -55,6 +55,8 @@ def signer(monkeypatch: pytest.MonkeyPatch) -> Signer:
             "exp": now + 3600,
         }
         claims.update(changes)
+        # A value of None removes the claim (a real ID token, for example, has no client_id).
+        claims = {name: value for name, value in claims.items() if value is not None}
         return jwt.encode(claims, private_key, algorithm="RS256", headers={"kid": "local-test"})
 
     return sign
@@ -79,13 +81,14 @@ def test_valid_access_token(client: TestClient, signer: Signer) -> None:
 @pytest.mark.parametrize(
     "changes",
     [
+        {"token_use": "id", "client_id": None, "aud": "demo-client"},
         {"token_use": "id"},
         {"client_id": "other-client"},
         {"iss": "https://attacker.invalid"},
         {"exp": 1},
         {"sub": None},
     ],
-    ids=["id-token", "other-client", "other-issuer", "expired", "no-sub"],
+    ids=["id-token", "token-use-id", "other-client", "other-issuer", "expired", "no-sub"],
 )
 def test_rejected_claims(client: TestClient, signer: Signer, changes: dict[str, Any]) -> None:
     response = client.get("/me", headers=bearer(signer(**changes)))

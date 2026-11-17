@@ -87,7 +87,7 @@ def current_claims(
 
 
 def current_user(claims: Annotated[dict[str, Any], Depends(current_claims)]) -> str:
-    """Return the verified user's sub. Same role as current_client() in Chapter 20."""
+    """Return the verified user's sub. Same name and role as in Chapter 20's oauth2_app.py."""
     sub: str = claims["sub"]
     return sub
 
@@ -100,8 +100,8 @@ def me(user: CurrentUser) -> dict[str, str]:
     return {"sub": user}
 
 
-# The routes below are the same as Chapter 20's api_key_app.py.
-# Only the authentication dependency changed: CurrentClient -> CurrentUser.
+# The routes below are identical to Chapter 20's oauth2_app.py.
+# Only the inside of current_user() changed: a TOKENS lookup -> JWT verification.
 @app.get("/tasks", responses=AUTH_ERROR_RESPONSES)
 def read_tasks(user: CurrentUser) -> list[Task]:
     return list_tasks(owner=user)

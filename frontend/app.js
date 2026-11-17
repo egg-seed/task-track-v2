@@ -1,4 +1,4 @@
-// A minimal Kanban screen for the Task API (Chapter 1, Chapter 20).
+// A minimal Kanban screen for the Task API (Chapter 1, Chapter 21).
 // It only calls the HTTP API: every rule (validation, storage) lives on the server.
 
 const STATUSES = ["TODO", "DOING", "DONE"];
@@ -14,7 +14,7 @@ async function callApi(method, path, body) {
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   if (!response.ok) {
-    // X-Request-ID is readable only because the API exposes it via CORS (Chapter 31).
+    // X-Request-ID is readable only because the API exposes it via CORS (Chapter 32).
     const requestId = response.headers.get("X-Request-ID") ?? "-";
     const detail = await response.json().catch(() => ({}));
     throw new Error(`${response.status} ${describe(detail)}（request_id: ${requestId}）`);

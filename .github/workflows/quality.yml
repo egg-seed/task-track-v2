@@ -120,7 +120,7 @@ jobs:
       - name: Offline JWT checks and coverage
         run: |
           uv run --locked --with "pytest-cov==7.1.0" pytest -q \
-            --cov=app \
+            --cov=app --cov=tasks \
             --cov-branch \
             --cov-report=term-missing \
             --cov-report="markdown-append:$GITHUB_STEP_SUMMARY" \

@@ -35,11 +35,11 @@ line-length = 100
 select = ["E", "F", "I", "UP", "B"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["app"]
+known-first-party = ["app", "tasks"]
 
 [tool.mypy]
 python_version = "3.14"
-files = ["app.py", "test_app.py"]
+files = ["app.py", "tasks.py", "test_app.py"]
 disallow_untyped_defs = true
 check_untyped_defs = true
 warn_unused_ignores = true

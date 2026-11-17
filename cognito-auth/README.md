@@ -1,6 +1,7 @@
 # Cognito access token example
 
 第34章（発展編）の独立サンプルです。既存 Phase 01〜04 には認証を追加しません。
+第20章の `auth-basics/` と同じタスクAPI（`GET /tasks`、`POST /tasks`、`GET /tasks/{task_id}`）を、Cognitoのアクセストークンで守ります。
 
 ## テスト（AWSアカウント不要）
 
@@ -32,4 +33,5 @@ uv run fastapi dev
 
 実環境ではOAuth2 Authorization Code + PKCE、スコープ、トークン寿命、
 ログの秘匿化、レート制限、失効と鍵ローテーションを別途検討してください。
-このサンプルの `sub` 一致は所有者認可の教材であり、実際のDBのアクセス制御は未実装です。
+タスクの認可（`tasks.py`）は、第20章の `auth-basics/tasks.py` と同じ処理です。所有者にはトークンの `sub` が入ります。
+データはメモリに保存する学習用の構成で、DBのアクセス制御は実装していません。

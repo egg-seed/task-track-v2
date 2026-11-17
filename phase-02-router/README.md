@@ -6,7 +6,7 @@ Phase 01と同じタスク管理APIを題材に、`main.py` をアプリケー�
 - `app/api/routes/`: HTTPエンドポイント
 - `app/api/dependencies.py`: メモリ上のストアを注入する依存関係
 - `app/schemas/task.py`: Pydanticスキーマ
-- `tutorials/httpx_client.py`: 外部APIクライアントの教材（第21章）
+- `tutorials/httpx_client.py`: 外部APIクライアントの教材（第22章）
 - `tutorials/openapi_docs.py`: Swagger UIの表示を整える教材（第10章）。`uv run fastapi dev tutorials/openapi_docs.py` で起動し、`TASKS_SHOW_DOCS=false` を付けると `/docs` などを閉じる
 - `tutorials/dependency_flow.py`: 依存関係が呼ばれる順番、共有、`yield` の後始末、OpenAPIへの表れ方の教材（第12章）。`uv run fastapi dev tutorials/dependency_flow.py` で起動すると、呼ばれた順にターミナルへ表示する
 - `tutorials/lifespan_demo.py`: アプリの起動・終了時の処理と、Lifespanからリクエストへ値を渡す教材（第13章）。`uv run fastapi dev tutorials/lifespan_demo.py` で起動し、`Ctrl+C` で止めると終了時の表示が出る

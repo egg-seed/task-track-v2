@@ -1,4 +1,4 @@
-# 第30章: Phase 01 を FastAPI Cloud へデプロイするワークフロー
+# 第31章: Phase 01 を FastAPI Cloud へデプロイするワークフロー
 #
 # - 手動実行（workflow_dispatch）だけで動く。main への push では動かない
 # - テストに通った後、production 環境の承認を待ってからデプロイする

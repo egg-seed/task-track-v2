@@ -1,4 +1,4 @@
-"""Request IDs, JSON logs, and health checks (Chapter 31)."""
+"""Request IDs, JSON logs, and health checks (Chapter 32)."""
 
 import json
 import logging

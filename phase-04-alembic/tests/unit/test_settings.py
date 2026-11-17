@@ -1,4 +1,4 @@
-"""Settings: sources, precedence, validation, and keeping secrets out of output (Chapter 26)."""
+"""Settings: sources, precedence, validation, and keeping secrets out of output (Chapter 27)."""
 
 import subprocess
 import sys

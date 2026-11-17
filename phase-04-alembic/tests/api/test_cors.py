@@ -1,4 +1,4 @@
-"""The Kanban frontend runs on another origin (port 5173) and calls this API (Chapter 20)."""
+"""The Kanban frontend runs on another origin (port 5173) and calls this API (Chapter 21)."""
 
 import pytest
 from fastapi.testclient import TestClient
@@ -32,7 +32,7 @@ def test_preflight_allows_frontend(client: TestClient, method: str) -> None:
 def test_response_exposes_request_id_to_frontend(client: TestClient) -> None:
     response = client.get("/tasks", headers={"Origin": FRONTEND})
     assert response.headers["access-control-allow-origin"] == FRONTEND
-    # Without this, browser JavaScript cannot read X-Request-ID (Chapter 31).
+    # Without this, browser JavaScript cannot read X-Request-ID (Chapter 32).
     assert response.headers["access-control-expose-headers"] == "X-Request-ID"
 
 

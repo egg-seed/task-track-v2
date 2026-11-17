@@ -1,4 +1,4 @@
-"""Show the N+1 query problem and how eager loading fixes it (Chapter 17).
+"""Show the N+1 query problem and how eager loading fixes it (Chapter 18).
 
 Run from phase-03-sqlmodel:
 

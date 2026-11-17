@@ -1,7 +1,7 @@
 [project]
 name = "fastapi-v2-auth-basics"
 version = "0.1.0"
-description = "FastAPI 第2版: APIキーとOAuth2パスワードフローによる認証・認可の独立サンプル（第19章）"
+description = "FastAPI 第2版: APIキーとOAuth2パスワードフローによる認証・認可の独立サンプル（第20章）"
 requires-python = ">=3.14,<3.15"
 dependencies = [
     "fastapi[standard]>=0.163,<0.164",

@@ -14,7 +14,7 @@ Zenn の技術書「実務で役立つAPI設計と実装 第2版」のサンプ�
 | Phase 03 | [phase-03-sqlmodel](phase-03-sqlmodel/) | SQLModel・Session・Repositoryを導入 |
 | Phase 04 | [phase-04-alembic](phase-04-alembic/) | Alembicによるスキーマ変更 |
 | Phase 04（非同期版） | [phase-04-async](phase-04-async/) | Phase 04を `AsyncSession` と非同期のpsycopgで書き換えた版 |
-| 認証の基本 | [auth-basics](auth-basics/) | APIキーとOAuth2パスワードフローによる認証、所有者による認可（第19章） |
+| 認証の基本 | [auth-basics](auth-basics/) | APIキーとOAuth2パスワードフローによる認証、所有者による認可（第20章） |
 | 発展編 | [cognito-auth](cognito-auth/) | Amazon Cognitoのアクセストークン検証と認可 |
 | 同期・非同期 | [sync-async-demo.py](sync-async-demo.py) | 標準ライブラリだけで動くasyncioのデモ |
 
@@ -57,7 +57,7 @@ uv run mypy app tests
 
 GitHub ActionsはMatrixでPhase 01〜04を独立して検証します。Python 3.14環境で各フェーズのuv同期、Ruff、mypy、pytestを実行します。Phase 01のDockerビルドとヘルスチェック、Cognitoサンプルのオフラインテスト、asyncioデモもCI対象です。
 
-`.github/workflows/deploy-phase01.yml` は、Phase 01をFastAPI Cloudへデプロイするワークフローです（第30章）。手動実行（workflow_dispatch）でだけ動き、テストに通った後、GitHubの `production` 環境での承認を待ってからデプロイします。動かすには、`production` 環境にSecrets（`FASTAPI_CLOUD_TOKEN`、`FASTAPI_CLOUD_APP_ID`）とVariables（`FASTAPI_CLOUD_APP_URL`）を登録してください。
+`.github/workflows/deploy-phase01.yml` は、Phase 01をFastAPI Cloudへデプロイするワークフローです（第31章）。手動実行（workflow_dispatch）でだけ動き、テストに通った後、GitHubの `production` 環境での承認を待ってからデプロイします。動かすには、`production` 環境にSecrets（`FASTAPI_CLOUD_TOKEN`、`FASTAPI_CLOUD_APP_ID`）とVariables（`FASTAPI_CLOUD_APP_URL`）を登録してください。
 
 各フェーズは書籍の完成時点のスナップショットとして維持し、不要な構成変更は行わず、必要な修正はすべてCIで確認します。
 

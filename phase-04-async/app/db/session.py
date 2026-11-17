@@ -18,7 +18,7 @@ ASYNC_DRIVERS = {"sqlite": "aiosqlite", "postgresql": "psycopg"}
 def database_url() -> str:
     """Return the DB URL: TASKS_DATABASE_URL, then DATABASE_URL, then local SQLite.
 
-    DATABASE_URL is the name FastAPI Cloud's Neon integration injects (Chapter 29).
+    DATABASE_URL is the name FastAPI Cloud's Neon integration injects (Chapter 30).
     """
     return (
         os.environ.get("TASKS_DATABASE_URL")

@@ -4,12 +4,12 @@
 .env.*
 !.env.example
 .fastapicloud/
-__pycache__/
+**/__pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 *.db
-*.pyc
+**/*.pyc
 tests/
 bench/
 README.md
